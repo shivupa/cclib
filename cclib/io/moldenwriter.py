@@ -165,10 +165,10 @@ class MOLDEN(filewriter.Writer):
         for i in range(mult):
             for j in range(len(moenergies[i])):
                 if has_syms:
-                    lines.append(' Sym= %s' % syms[i][j])
+                    lines.append(' Sym= {}'.format(syms[i][j]))
                 moenergy = utils.convertor(moenergies[i][j], 'eV', 'hartree')
                 lines.append(' Ene= {:10.4f}'.format(moenergy))
-                lines.append(' Spin= %s' % spin)
+                lines.append(' Spin= {}'.format(spin))
                 if j <= homos[i]:
                     lines.append(' Occup= {:10.6f}'.format(2.0 / mult))
                 else:
