@@ -186,7 +186,6 @@ class MOLDEN(filewriter.Writer):
             nelec_alpha = self.ccdata.nelectrons - nelec_beta
             # nelec_alpha += unpaired_elec
             occ = [nelec_alpha, nelec_beta]
-            i = 0
             for i, spin in enumerate(["Alpha", "Beta"]):
                 for j in range(len(moenergies[0])):
                     if has_syms:
