@@ -161,24 +161,71 @@ class MOLDEN(filewriter.Writer):
             has_syms = True
             syms = self.ccdata.mosyms
 
-        spin = 'Alpha'
-        for i in range(mult):
-            for j in range(len(moenergies[i])):
-                if has_syms:
-                    lines.append(' Sym= {}'.format(syms[i][j]))
-                moenergy = utils.convertor(moenergies[i][j], 'eV', 'hartree')
-                lines.append(' Ene= {:10.4f}'.format(moenergy))
-                lines.append(' Spin= {}'.format(spin))
-                if j <= homos[i]:
-                    lines.append(' Occup= {:10.6f}'.format(2.0 / mult))
-                else:
-                    lines.append(' Occup= {:10.6f}'.format(0.0))
-                # Rearrange mocoeffs according to Molden's lexicographical order.
-                mocoeffs[i][j] = self._rearrange_mocoeffs(mocoeffs[i][j])
-                for k, mocoeff in enumerate(mocoeffs[i][j]):
-                    lines.append('{:4d}  {:10.6f}'.format(k + 1, mocoeff))
-
-            spin = 'Beta'
+        if self.ccdata.closed_shell:
+            docc = self.ccdata.nelectrons // 2
+            for i, spin in enumerate(["Alpha"]):
+                for j in range(len(moenergies[i])):
+                    if has_syms:
+                        lines.append(' Sym= {}'.format(syms[i][j]))
+                    else:
+                        lines.append(' Sym= A')
+                    moenergy = utils.convertor(moenergies[i][j], 'eV', 'hartree')
+                    lines.append(' Ene= {:10.4f}'.format(moenergy))
+                    lines.append(' Spin= {}'.format(spin))
+                    if j < docc:
+                        lines.append(' Occup= {:10.6f}'.format(2.0))
+                    else:
+                        lines.append(' Occup= {:10.6f}'.format(0.0))
+                    mocoeffs[i][j] = self._rearrange_mocoeffs(mocoeffs[i][j])
+                    for k, mocoeff in enumerate(mocoeffs[i][j]):
+                        lines.append('{:4d}  {:10.6f}'.format(k + 1, mocoeff))
+        elif len(self.ccdata.mocoeffs) == 1:
+            unpaired_elec = (self.ccdata.mult-1)//2
+            nelec_beta = self.ccdata.nelectrons // 2
+            nelec_beta -= unpaired_elec
+            nelec_alpha = self.ccdata.nelectrons - nelec_beta
+            # nelec_alpha += unpaired_elec
+            occ = [nelec_alpha, nelec_beta]
+            i = 0
+            for i, spin in enumerate(["Alpha", "Beta"]):
+                for j in range(len(moenergies[0])):
+                    if has_syms:
+                        lines.append(' Sym= {}'.format(syms[0][j]))
+                    else:
+                        lines.append(' Sym= A')
+                    moenergy = utils.convertor(moenergies[0][j], 'eV', 'hartree')
+                    lines.append(' Ene= {:10.4f}'.format(moenergy))
+                    lines.append(' Spin= {}'.format(spin))
+                    if j < occ[i]:
+                        lines.append(' Occup= {:10.6f}'.format(1.0))
+                    else:
+                        lines.append(' Occup= {:10.6f}'.format(0.0))
+                    mocoeffs[0][j] = self._rearrange_mocoeffs(mocoeffs[0][j])
+                    for k, mocoeff in enumerate(mocoeffs[0][j]):
+                        lines.append('{:4d}  {:10.6f}'.format(k + 1, mocoeff))
+        else:
+            unpaired_elec = (self.ccdata.mult-1)//2
+            nelec_beta = self.ccdata.nelectrons // 2
+            nelec_beta -= unpaired_elec
+            nelec_alpha = self.ccdata.nelectrons - nelec_beta
+            # nelec_alpha += unpaired_elec
+            occ = [nelec_alpha, nelec_beta]
+            for i, spin in enumerate(["Alpha", "Beta"]):
+                for j in range(len(moenergies[i])):
+                    if has_syms:
+                        lines.append(' Sym= {}'.format(syms[i][j]))
+                    else:
+                        lines.append(' Sym= A')
+                    moenergy = utils.convertor(moenergies[i][j], 'eV', 'hartree')
+                    lines.append(' Ene= {:10.4f}'.format(moenergy))
+                    lines.append(' Spin= {}'.format(spin))
+                    if j < occ[i]:
+                        lines.append(' Occup= {:10.6f}'.format(1.0))
+                    else:
+                        lines.append(' Occup= {:10.6f}'.format(0.0))
+                    mocoeffs[i][j] = self._rearrange_mocoeffs(mocoeffs[i][j])
+                    for k, mocoeff in enumerate(mocoeffs[i][j]):
+                        lines.append('{:4d}  {:10.6f}'.format(k + 1, mocoeff))
 
         return lines
 
