@@ -161,7 +161,7 @@ class MOLDEN(filewriter.Writer):
             has_syms = True
             syms = self.ccdata.mosyms
 
-        if self.ccdata.closed_shell:
+        if self.ccdata.closed_shell and self.ccdata.mult == 1:
             docc = self.ccdata.nelectrons // 2
             for i, spin in enumerate(["Alpha"]):
                 for j in range(len(moenergies[i])):
