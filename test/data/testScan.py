@@ -33,7 +33,7 @@ class GenericScanTestBase(unittest.TestCase):
         return optstatus_value & OPT_DONE == OPT_DONE
 
 
-class GenericScanTest_optdone_bool(GenericScanTestBase):
+class GenericRelaxedScanTest_optdone_bool(GenericScanTestBase):
     """Generic relaxed potential energy surface scan unittest."""
 
     datatype = cclib.parser.data.ccData_optdone_bool
