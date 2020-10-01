@@ -66,7 +66,7 @@ if _found_pyquante:
     # Used in both `wavefunction` and `electrondensity`
     def pyamp(bfs, bs, points):
         # 1D numpy array with size 1 is returned from __call__ here.
-        mesh_vals = np.zeros(len(points))
+        mesh_vals = numpy.zeros(len(points))
         for i in range(len(points)):
             mesh_vals[i] = bfs[bs].amp(points[i][0], points[i][1], points[i][2])
         return mesh_vals
