@@ -102,10 +102,10 @@ class ASETest(unittest.TestCase):
             ase_data.atomcharges["mulliken"], data.atomcharges["mulliken"]
         )
         assert np.allclose(
-            ase_data.atomspins["mulliken"], 0
+            ase_data.atomspins["mulliken"], data.atomspins["mulliken"]
         )  # spin densities not supported but overwritten by EMT
         assert np.isclose(ase_data.charge, data.charge)
-        assert np.isclose(ase_data.mult, 1)
+        assert np.isclose(ase_data.mult, 2)
         assert np.isclose(ase_data.natom, len(data.atomnos))
         assert np.isclose(ase_data.temperature, 0)
 
