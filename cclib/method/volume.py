@@ -36,8 +36,35 @@ sym2powerlist = {
     ],
 }
 
-
+_found_gau2grid = find_package("gau2grid")
 _found_pyquante = find_package("PyQuante")
+
+if _found_gau2grid:
+    pass
+    def grid_basis(ccdata,volume):
+        """
+        generates basis set on a grid using gau2grid
+        parameters
+        ----
+        ccdata: cclib object
+
+        Returns
+        ----
+
+        """
+        _angmom_key = {'S':0,'P':1,'D':2,'F':3}
+        pts = np.zeros(npts)
+        # loop over basis functions on each atom
+        for a_idx,abasis in enumerate(ccdata.gbasis):
+            location = ccdata.atomcoords[a_idx]
+            # loop over each function on an atom
+            for bf in abasis:
+                # loop over all primitives
+                for prim in bf:
+                    ret = gau2grid.collocation(volume, _angmom_key[bf[0]], prim[1], prim[0], location)
+
+        return grid
+
 if _found_pyquante:
     from PyQuante.CGBF import CGBF
 
@@ -115,7 +142,7 @@ if _found_pyquante2:
 
         return bfs
 
-    def pyamp(bfs, bs, points):
+    def pyamp(bfs, bsand , points):
         """Wrapper for evaluating basis functions at one or more grid points.
 
         Parameters
