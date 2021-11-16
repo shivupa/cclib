@@ -40,8 +40,8 @@ _found_gau2grid = find_package("gau2grid")
 _found_pyquante = find_package("PyQuante")
 
 if _found_gau2grid:
-    pass
-    def grid_basis(ccdata,volume):
+    import gau2grid
+    def grid_basis(ccdata,vol):
         """
         generates basis set on a grid using gau2grid
         parameters
@@ -53,17 +53,30 @@ if _found_gau2grid:
 
         """
         _angmom_key = {'S':0,'P':1,'D':2,'F':3}
-        pts = np.zeros(npts)
         # loop over basis functions on each atom
         for a_idx,abasis in enumerate(ccdata.gbasis):
-            location = ccdata.atomcoords[a_idx]
+            location = ccdata.atomcoords[a_idx][0]
+            vol_grid = numpy.array(getGrid(vol))
             # loop over each function on an atom
+            basis_collect = []
             for bf in abasis:
                 # loop over all primitives
-                for prim in bf:
-                    ret = gau2grid.collocation(volume, _angmom_key[bf[0]], prim[1], prim[0], location)
+                coeffs = [] 
+                exps = []
+                for prims in bf[1:]:
+                    for prim in prims:
+                      coeffs.append(prim[1])
+                      exps.append(prim[0])
+            basis_collect.append(
+                    {'center':location,
+                      'exp':exps,
+                      'coef':coeffs,
+                      'am':_angmom_key[bf[0]]}
+                    )
+        ret = gau2grid.collocation_basis(vol_grid,basis_collect)
+        print(ret)
 
-        return grid
+        return ret
 
 if _found_pyquante:
     from PyQuante.CGBF import CGBF
