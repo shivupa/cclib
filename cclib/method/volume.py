@@ -54,11 +54,11 @@ if _found_gau2grid:
         """
         _angmom_key = {'S':0,'P':1,'D':2,'F':3}
         # loop over basis functions on each atom
+        basis_collect = []
         for a_idx,abasis in enumerate(ccdata.gbasis):
             location = ccdata.atomcoords[a_idx][0]
             vol_grid = numpy.array(getGrid(vol))
             # loop over each function on an atom
-            basis_collect = []
             for bf in abasis:
                 # loop over all primitives
                 coeffs = [] 
@@ -67,14 +67,15 @@ if _found_gau2grid:
                     for prim in prims:
                       coeffs.append(prim[1])
                       exps.append(prim[0])
-            basis_collect.append(
-                    {'center':location,
-                      'exp':exps,
-                      'coef':coeffs,
-                      'am':_angmom_key[bf[0]]}
-                    )
+                basis_collect.append(
+                       {'center':location,
+                         'exp':exps,
+                         'coef':coeffs,
+                         'am':_angmom_key[bf[0]]}
+                        )
+        print(basis_collect)
         ret = gau2grid.collocation_basis(vol_grid,basis_collect)
-        print(ret)
+        print(ret['PHI'].shape)
 
         return ret
 
