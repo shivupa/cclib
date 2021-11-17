@@ -342,9 +342,8 @@ def getGrid(vol):
     x = numpy.arange(vol.origin[0], gridendpt[0], vol.spacing[0]) / conversion
     y = numpy.arange(vol.origin[1], gridendpt[1], vol.spacing[1]) / conversion
     z = numpy.arange(vol.origin[2], gridendpt[2], vol.spacing[2]) / conversion
-
-    return (x, y, z)
-
+    xv,yv,zv = numpy.meshgrid(x,y,z,indexing='ij')
+    return numpy.array((xv.flatten(), yv.flatten(), zv.flatten()))
 
 def wavefunction(ccdata, volume, mocoeffs):
     """Calculate the magnitude of the wavefunction at every point in a volume.
