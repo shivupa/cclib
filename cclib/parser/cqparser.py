@@ -34,56 +34,7 @@ class CQDev(logfileparser.Logfile):
         return f'CQDev("{self.filename}")'
 
     def before_parsing(self):
-        # Keep track of whether or not we're performing an
-        # (un)restricted calculation.
-        self.unrestricted = False
-        self.is_rohf = False
-
-        # By default, when asked to print orbitals via
-        # `scf_print`/`scf_final_print` and/or `print_orbitals`, CQDev will
-        # print all occupieds and the first 5 virtuals for versions prior to
-        # 5.2.
-        #
-        # When the number is set for `print_orbitals`, that section of
-        # the output will display (NOcc + that many virtual) MOs, but
-        # any other sections present due to
-        # `scf_print`/`scf_final_print` will still only display (NOcc
-        # + 5) MOs. It is the `print_orbitals` section that `aonames`
-        # is parsed from.
-        #
-        # Note that the (AO basis) density matrix is always (NBasis *
-        # NBasis)!
-        self.norbdisp_alpha = self.norbdisp_beta = 5
-        self.norbdisp_alpha_aonames = self.norbdisp_beta_aonames = 5
-
-        self.alpha_mo_coefficient_headers = (
-            "RESTRICTED (RHF) MOLECULAR ORBITAL COEFFICIENTS",
-            "ALPHA MOLECULAR ORBITAL COEFFICIENTS",
-        )
-
-        self.gradient_headers = (
-            "Full Analytical Gradient",
-            "Gradient of SCF Energy",
-            "Gradient of MP2 Energy",
-        )
-
-        self.hessian_headers = (
-            "Hessian of the SCF Energy",
-            "Final Hessian.",
-        )
-
-        self.wfn_method = [
-            "HF",
-            "MP2",
-            "RI-MP2",
-            "LOCAL_MP2",
-            "MP4",
-            "CCD",
-            "CCSD",
-            "CCSD(T)",
-            "QCISD",
-            "QCISD(T)",
-        ]
+        pass
 
     def after_parsing(self):
         super(CQDev, self).after_parsing()
